@@ -2,11 +2,24 @@ import type * as trpcExpress from "@trpc/server/adapters/express";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { logger } from "./utils/logger";
 
 export const createTRPCContext = ({
   req,
   res,
-}: trpcExpress.CreateExpressContextOptions) => ({ req, res });
+}: trpcExpress.CreateExpressContextOptions) => {
+  const authToken = req.headers.authorization ?? null;
+
+  // const session = await isomorphicGetSession(opts.headers);
+  const session = {
+    user: null,
+  };
+  const source = req.headers["x-trpc-source"] as string | undefined;
+
+  logger.info(`>>> tRPC Request from ${source} by ${session.user}`);
+
+  return { req, res };
+};
 
 type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 
@@ -51,7 +64,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   const result = await next();
 
   const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+  logger.info(`[TRPC] ${path} took ${end - start}ms to execute`);
 
   return result;
 });
