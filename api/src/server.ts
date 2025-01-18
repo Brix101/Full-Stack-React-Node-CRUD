@@ -2,17 +2,14 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-import { createTRPCContext, createTrpcRouter, publicProcedure } from "./trpc";
-import { logger } from "./utils/logger";
 import { todoRouter } from "./routes/todo";
+import { createTRPCContext, createTrpcRouter } from "./trpc";
+import { logger } from "./utils/logger";
 
 const app = express();
 
 export const appRouter = createTrpcRouter({
   todo: todoRouter,
-  greeting: publicProcedure.query(() => {
-    return "hello tRPC v11!";
-  }),
 });
 
 export type AppRouter = typeof appRouter;
@@ -28,7 +25,7 @@ app.use(
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext: createTRPCContext,
-  }),
+  })
 );
 
 export const startServer = () => {

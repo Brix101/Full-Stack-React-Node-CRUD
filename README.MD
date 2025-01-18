@@ -16,7 +16,9 @@ Ensure you have the following installed on your machine
 - [Docker](https://www.docker.com/get-started)
 - [Pnpm](https://pnpm.io/installation)
 
-## Installation and Setup Follow these steps to set up the project locally
+## Installation and Setup
+
+Follow these steps to set up the project locally
 
 ### 1. Clone the Repository
 
