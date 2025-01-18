@@ -41,7 +41,7 @@ Start the database using Docker Compose:
 docker-compose up -d --build
 ```
 
-This will spin up the database container defined in the `docker-compose.yml` file. Ensure your backend connects to this database during development.
+This will spin up the database container defined in the `docker-compose.yml` file. Ensure the backend connects to this database during development.
 
 ### 4. Setup Environment Variables
 
@@ -53,7 +53,7 @@ cp ./api/.env.example ./api/.env
 
 ### 5. Push Database Migrations
 
-Push database migrations to ensure the schema is up-to-date:
+Push the database migrations to ensure the schema is up-to-date:
 
 ```bash
 pnpm run --filter=api drizzle-kit push
@@ -64,10 +64,10 @@ pnpm run --filter=api drizzle-kit push
 Run the entire application using the development script:
 
 ```bash
-pnpm run --filter=api drizzle-kit push
+pnpm dev
 ```
 
-This will start both the frontend and backend servers. You can then access the application at:
+This will start both the frontend and backend servers. Then we can access the application at:
 
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:5000`
