@@ -1,10 +1,10 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTableColumnHeader } from "./data-table/data-table-column-header";
-import { format } from "date-fns";
-import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
-import { Todo } from "@/utils/types";
+import { Todo } from "@/types";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { DataTableColumnHeader } from "./data-table/data-table-column-header";
 import { TodoAction } from "./todo-action";
+import { Badge } from "./ui/badge";
 
 export const todoColums: ColumnDef<Todo>[] = [
   {
@@ -28,7 +28,7 @@ export const todoColums: ColumnDef<Todo>[] = [
         <Badge
           className={cn(
             "uppercase",
-            isCompleted ? "bg-green-400" : "bg-red-400",
+            isCompleted ? "bg-green-400" : "bg-red-400"
           )}
         >
           {isCompleted ? "Complete" : "InComplete"}

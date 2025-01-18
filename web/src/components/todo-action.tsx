@@ -1,4 +1,4 @@
-import { Todo } from "@/utils/types";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,12 +6,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { EllipsisIcon } from "lucide-react";
-import { toast } from "sonner";
+import { useTodoFormContext } from "@/providers/todo-form-provider";
+import { Todo } from "@/types";
 import { trpc } from "@/utils/trpc";
 import { getQueryKey } from "@trpc/react-query";
-import { useTodoFormContext } from "@/providers/todo-form-provider";
+import { EllipsisIcon } from "lucide-react";
+import { toast } from "sonner";
 
 interface TodoActionProps {
   todo: Todo;
@@ -27,9 +27,6 @@ export function TodoAction({ todo }: TodoActionProps) {
 
   const todoDelete = trpc.todo.delete.useMutation({
     onMutate: () => {
-      toast.loading("Deleting todo!", {
-        id: deleteToastId,
-      });
       utils.todo.all.setData(undefined, (oldData) => {
         if (!oldData) {
           return oldData;
@@ -39,6 +36,9 @@ export function TodoAction({ todo }: TodoActionProps) {
 
       const prevData = utils.todo.all.getData(undefined);
 
+      toast.loading("Deleting todo!", {
+        id: deleteToastId,
+      });
       return { prevData };
     },
     onSuccess: () => {
@@ -62,7 +62,6 @@ export function TodoAction({ todo }: TodoActionProps) {
 
   function handleDeleteAction() {
     toast("Delete todo?", {
-      id: deleteToastId,
       action: {
         label: "Delete",
         onClick: () => todoDelete.mutate({ id: todo.id }),

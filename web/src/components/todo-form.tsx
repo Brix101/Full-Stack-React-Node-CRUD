@@ -1,7 +1,5 @@
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RouterInputs } from "@rn-crud/api";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -11,15 +9,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { trpc } from "@/utils/trpc";
-import { getQueryKey } from "@trpc/react-query";
-import { toast } from "sonner";
 import { useTodoFormContext } from "@/providers/todo-form-provider";
+import { trpc } from "@/utils/trpc";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RouterInputs } from "@rn-crud/api";
+import { getQueryKey } from "@trpc/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const input = z.object({
-  title: z.string().max(256),
+  title: z
+    .string()
+    .min(1, { message: "Title must must contain at least 1 character(s)" })
+    .max(256),
   isCompleted: z.boolean().default(false),
 });
 

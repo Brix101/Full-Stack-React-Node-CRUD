@@ -1,7 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
-import { publicProcedure } from "../trpc";
-import { createTodoSchema, todo } from "../db/schema";
 import { z } from "zod";
+import { createTodoSchema, todo } from "../db/schema";
+import { publicProcedure } from "../trpc";
 
 const findOneSchema = z.object({
   id: z.string(),

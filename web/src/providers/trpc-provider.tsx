@@ -1,7 +1,7 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { httpBatchLink, loggerLink } from "@trpc/client";
+import React from "react";
 import superjson from "superjson";
 
 import { queryClient } from "@/utils/query-client";
@@ -26,7 +26,7 @@ export function TRPCReactProvider(props: React.PropsWithChildren) {
           },
         }),
       ],
-    }),
+    })
   );
 
   return (

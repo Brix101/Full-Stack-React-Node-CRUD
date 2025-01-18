@@ -1,4 +1,4 @@
-import { Todo } from "@/utils/types";
+import { Todo } from "@/types";
 import React from "react";
 
 interface TodoFormContextType {
@@ -9,7 +9,7 @@ interface TodoFormContextType {
 }
 
 const TodoFormContext = React.createContext<TodoFormContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export function TodoFormProvider(props: React.PropsWithChildren) {
@@ -23,11 +23,12 @@ export function TodoFormProvider(props: React.PropsWithChildren) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTodoFormContext() {
   const context = React.useContext(TodoFormContext);
   if (!context) {
     throw new Error(
-      "useTodoFormContext must be used within a TodoFormProvider",
+      "useTodoFormContext must be used within a TodoFormProvider"
     );
   }
   return context;
