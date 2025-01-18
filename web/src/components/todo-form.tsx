@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RouterInputs, RouterOutputs } from "@rn-crud/api";
+import { RouterInputs } from "@rn-crud/api";
 import {
   Form,
   FormControl,
@@ -16,33 +16,31 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { trpc } from "@/utils/trpc";
 import { getQueryKey } from "@trpc/react-query";
 import { toast } from "sonner";
-
-interface TodoFormProps {
-  onCloseForm?(open: boolean): void;
-}
+import { useTodoFormContext } from "@/providers/todo-form-provider";
 
 const input = z.object({
   title: z.string().max(256),
   isCompleted: z.boolean().default(false),
 });
 
-export function TodoForm(props: TodoFormProps) {
+export function TodoForm() {
+  const { setIsOpen, todo, setTodo } = useTodoFormContext();
+
   const utils = trpc.useUtils();
   const form = useForm({
     resolver: zodResolver(input),
     defaultValues: {
-      title: "",
-      isCompleted: false,
+      title: todo?.title ?? "",
+      isCompleted: todo?.isCompleted ?? false,
     },
   });
 
-  const mutationKey = getQueryKey(trpc.todo.create);
-  const toastId = mutationKey.join("-");
-
+  const createKey = getQueryKey(trpc.todo.create);
+  const createToastId = createKey.join("-");
   const createMutation = trpc.todo.create.useMutation({
     onMutate: () => {
       toast.loading("Adding todo!", {
-        id: toastId,
+        id: createToastId,
       });
     },
     onSuccess: (data) => {
@@ -54,23 +52,79 @@ export function TodoForm(props: TodoFormProps) {
       });
 
       toast.success("Todo successfully added!", {
-        id: toastId,
+        id: createToastId,
       });
     },
     onError: (err) => {
       toast.error("Failed to add todo", {
-        id: toastId,
+        id: createToastId,
         description: err.message,
       });
     },
   });
 
-  function onSubmit(values: RouterInputs["todo"]["create"]) {
-    if (props.onCloseForm) {
-      props.onCloseForm(false);
-    }
+  const updateKey = getQueryKey(trpc.todo.update);
+  const updateToastId = updateKey.join("-");
+  const updateMutation = trpc.todo.update.useMutation({
+    onMutate: ({ id, values }) => {
+      toast.loading("Updating todo!", {
+        id: updateToastId,
+      });
+      utils.todo.all.setData(undefined, (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        return oldData.map((item) => {
+          if (item.id === id) {
+            return { ...item, values };
+          }
+          return item;
+        });
+      });
 
-    createMutation.mutate(values);
+      const prevData = utils.todo.all.getData(undefined);
+
+      return { prevData };
+    },
+    onSuccess: (data) => {
+      utils.todo.all.setData(undefined, (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+        return oldData.map((item) => {
+          const updatedTodo = data?.find((upData) => upData.id === item.id);
+          if (updatedTodo) {
+            return { ...item, ...updatedTodo };
+          }
+          return item;
+        });
+      });
+
+      toast.success("Todo successfully updated!", {
+        id: updateToastId,
+      });
+    },
+    onError: (err, _, ctx) => {
+      console.log(err);
+      toast.error("Failed to update todo", {
+        id: updateToastId,
+        description: err.message,
+      });
+      utils.todo.all.setData(undefined, ctx?.prevData);
+    },
+  });
+
+  function onSubmit(values: RouterInputs["todo"]["create"]) {
+    if (todo) {
+      updateMutation.mutate({
+        id: todo.id,
+        values: values,
+      });
+    } else {
+      createMutation.mutate(values);
+    }
+    setIsOpen(false);
+    setTodo(undefined);
   }
 
   return (
@@ -106,10 +160,7 @@ export function TodoForm(props: TodoFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">
-          Add
-          <span className="sr-only">Add</span>
-        </Button>
+        <Button type="submit">{todo ? "Update" : "Add"}</Button>
       </form>
     </Form>
   );

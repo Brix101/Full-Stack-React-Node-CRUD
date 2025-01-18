@@ -11,12 +11,15 @@ import { EllipsisIcon } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/utils/trpc";
 import { getQueryKey } from "@trpc/react-query";
+import { useTodoFormContext } from "@/providers/todo-form-provider";
 
 interface TodoActionProps {
   todo: Todo;
 }
 
 export function TodoAction({ todo }: TodoActionProps) {
+  const { setIsOpen, setTodo } = useTodoFormContext();
+
   const utils = trpc.useUtils();
 
   const deleteKey = getQueryKey(trpc.todo.delete);
@@ -52,6 +55,11 @@ export function TodoAction({ todo }: TodoActionProps) {
     },
   });
 
+  function handleUpdateAction() {
+    setTodo(todo);
+    setIsOpen(true);
+  }
+
   function handleDeleteAction() {
     toast("Delete todo?", {
       id: deleteToastId,
@@ -73,7 +81,7 @@ export function TodoAction({ todo }: TodoActionProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>Update</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleUpdateAction}>Update</DropdownMenuItem>
         <DropdownMenuItem onClick={handleDeleteAction}>Delete</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

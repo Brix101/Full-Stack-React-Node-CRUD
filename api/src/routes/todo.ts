@@ -28,7 +28,11 @@ export const todoRouter = {
       return ctx.db.insert(todo).values(input).returning();
     }),
   update: publicProcedure.input(updateTodoSchema).mutation(({ ctx, input }) => {
-    return ctx.db.update(todo).set(input.values).where(eq(todo.id, input.id));
+    return ctx.db
+      .update(todo)
+      .set(input.values)
+      .where(eq(todo.id, input.id))
+      .returning();
   }),
   delete: publicProcedure.input(findOneSchema).mutation(({ ctx, input }) => {
     return ctx.db.delete(todo).where(eq(todo.id, input.id));

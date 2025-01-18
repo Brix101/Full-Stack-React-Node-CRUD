@@ -8,7 +8,7 @@ export const todo = pgTable("todo", (t) => ({
   title: t.varchar({ length: 256 }).notNull(),
   isCompleted: t.boolean().default(false).notNull(),
   createdAt: t.timestamp().defaultNow().notNull(),
-  updatedAt: t.timestamp().$onUpdateFn(() => sql`now()`),
+  updatedAt: t.timestamp({ mode: "string" }).$onUpdateFn(() => sql`now()`),
 }));
 
 export const createTodoSchema = createInsertSchema(todo, {
