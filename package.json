@@ -1,0 +1,17 @@
+{
+  "name": "Full-Stack-React-Node-CRUD",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter @rn-crud/api run dev\" \"pnpm --filter @rn-crud/web run dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^3.4.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
