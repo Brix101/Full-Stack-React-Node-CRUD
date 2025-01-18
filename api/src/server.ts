@@ -4,11 +4,13 @@ import cors from "cors";
 import express from "express";
 import { createTRPCContext, createTrpcRouter, publicProcedure } from "./trpc";
 import { logger } from "./utils/logger";
+import { todoRouter } from "./routes/todo";
 
 const app = express();
 
 export const appRouter = createTrpcRouter({
-  greeting: publicProcedure.query(({ ctx }) => {
+  todo: todoRouter,
+  greeting: publicProcedure.query(() => {
     return "hello tRPC v11!";
   }),
 });
