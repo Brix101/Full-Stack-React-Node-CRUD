@@ -1,11 +1,10 @@
-import { RouterOutputs } from "@rn-crud/api";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table/data-table-column-header";
 import { format } from "date-fns";
 import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
-
-type Todo = RouterOutputs["todo"]["all"][0];
+import { Todo } from "@/utils/types";
+import { TodoAction } from "./todo-action";
 
 export const todoColums: ColumnDef<Todo>[] = [
   {
@@ -48,6 +47,12 @@ export const todoColums: ColumnDef<Todo>[] = [
       const formatedDate = format(date, "MMM dd yyyy, hh:mm a");
 
       return <span>{formatedDate}</span>;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <TodoAction todo={row.original} />;
     },
   },
 ];
