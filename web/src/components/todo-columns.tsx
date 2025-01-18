@@ -20,7 +20,7 @@ export const todoColums: ColumnDef<Todo>[] = [
   {
     accessorKey: "isCompleted",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Complete" />
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       const isCompleted = row.getValue("isCompleted") as Todo["isCompleted"];
