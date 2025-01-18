@@ -8,7 +8,9 @@ import { logger } from "./utils/logger";
 const app = express();
 
 export const appRouter = createTrpcRouter({
-  greeting: publicProcedure.query(() => "hello tRPC v11!"),
+  greeting: publicProcedure.query(({ ctx }) => {
+    return "hello tRPC v11!";
+  }),
 });
 
 export type AppRouter = typeof appRouter;

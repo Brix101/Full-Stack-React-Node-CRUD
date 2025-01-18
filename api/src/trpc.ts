@@ -3,6 +3,7 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { logger } from "./utils/logger";
+import { db } from "./db";
 
 export const createTRPCContext = ({
   req,
@@ -18,10 +19,12 @@ export const createTRPCContext = ({
 
   logger.info(`>>> tRPC Request from ${source} by ${session.user}`);
 
-  return { req, res };
+  return { req, res, db };
 };
 
-type Context = Awaited<ReturnType<typeof createTRPCContext>>;
+type Context = Awaited<ReturnType<typeof createTRPCContext>> & {
+  db: typeof db;
+};
 
 export const t = initTRPC.context<Context>().create({
   transformer: superjson,
