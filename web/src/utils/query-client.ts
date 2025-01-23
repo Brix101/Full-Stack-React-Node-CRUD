@@ -11,6 +11,7 @@ export const queryClient = new QueryClient({
   },
   queryCache: new QueryCache({
     onError: (error) => {
+      console.log(error);
       const title = error instanceof Error ? error.name : "Unknown error";
       const description = `An error occurred: ${
         error instanceof Error ? error.message : "Unknown error"

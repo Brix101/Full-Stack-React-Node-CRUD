@@ -9,7 +9,7 @@ export const createTRPCContext = ({
   req,
   res,
 }: trpcExpress.CreateExpressContextOptions) => {
-  const authToken = req.headers.authorization ?? null;
+  // const authToken = req.headers.authorization ?? null;
 
   // const session = await isomorphicGetSession(opts.headers);
   const session = {
@@ -22,9 +22,7 @@ export const createTRPCContext = ({
   return { req, res, db };
 };
 
-type Context = Awaited<ReturnType<typeof createTRPCContext>> & {
-  db: typeof db;
-};
+type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 
 export const t = initTRPC.context<Context>().create({
   transformer: superjson,
